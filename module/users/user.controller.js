@@ -1,10 +1,11 @@
 const { hashPassword, comparePassword } = require("../../utils/bcryptjs");
+const { mailer } = require("../../utils/mailer");
 const userModel = require("./user.model");
-const register = (payload) => {
+const register = async (payload) => {
   password.payload = hashPassword(password.payload);
   const user = userModel.create(payload);
   if (!user) throw new error("user doent match");
-
+  const result = await mailer(email.user);
   return result;
 };
 const login = (payload) => {
