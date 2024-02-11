@@ -11,7 +11,7 @@ const userSchema = new Schema({
     required: true,
   },
   token: String,
-  isActive: { type: String, required: true, default: true },
+  isActive: { type: Boolean, required: true, default: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });

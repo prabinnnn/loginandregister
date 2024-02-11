@@ -47,7 +47,7 @@ const generatefptoken = async (payload) => {
   const randomToken = generateRandomToken();
   await userModel.updateOne({ email }, { token: randomToken });
   const isEmailSent = await mailer(
-    user.mail,
+    user.email,
     "forget Password",
     `your token is ${randomToken}`
   );
@@ -56,16 +56,16 @@ const generatefptoken = async (payload) => {
 const verifyFpToken = async (payload) => {
   const { token, password, email } = payload;
   if (!token || !password || !email)
-    throw new Error("token or password or email is missing");
-  const user = userModel.findOne({ email });
-  if (!user) throw new Error("user is missing");
+    throw new Error("Token, password, or email is missing");
+  const user = await userModel.findOne({ email });
+  if (!user) throw new Error("User not found");
   const { token: verifyToken } = user;
-  if (token !== verifyToken) throw new Error("token is missmatching");
-  const updateUser = await userModel.updateOne(
+  if (token !== verifyToken) throw new Error("Token is mismatching");
+  await userModel.updateOne(
     { email },
     { password: hashPassword(password), token: "" }
   );
-  return "token is send successfully";
+  return "Password updated successfully";
 };
 const resetPassword = (payload) => {
   const { password, userId } = payload;
@@ -79,7 +79,7 @@ const changePassword = async (payload) => {
   const { userId, oldPassword, newPassword } = payload;
   if (!userId || !oldPassword || newPassword)
     throw new Error("something missing");
-  const user = await userModel.findOne({ user: userId });
+  const user = await userModel.findOne({ user: userId }).select("+password");
   if (!user) throw new Error("user is missing");
   const isValidOldPassword = comparePassword(oldPassword, user.password);
   if (!isValidOldPassword) throw new Error("password didnt match");

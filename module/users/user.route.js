@@ -31,7 +31,7 @@ router.get("/", checkRoles(["admin"]), async (req, res, next) => {
     next(e);
   }
 });
-router.post("/generatefptoken ", async (req, res, next) => {
+router.post("/generate-Fp-token", async (req, res, next) => {
   try {
     const result = await userController.generatefptoken(req.body);
     res.json({ msg: result });
@@ -39,7 +39,7 @@ router.post("/generatefptoken ", async (req, res, next) => {
     next(e);
   }
 });
-router.post("/verifyFpToken ", async (req, res, next) => {
+router.post("/verify-fp-token", async (req, res, next) => {
   try {
     const result = await userController.verifyFpToken(req.body);
     res.json({ msg: result });
@@ -50,6 +50,14 @@ router.post("/verifyFpToken ", async (req, res, next) => {
 router.post("/reset-password", async (req, res, next) => {
   try {
     const result = await userController.resetPassword(req.body);
+    res.json({ msg: result });
+  } catch (e) {
+    next(e);
+  }
+});
+router.post("/change-password", async (req, res, next) => {
+  try {
+    const result = await userController.changePassword(req.body);
     res.json({ msg: result });
   } catch (e) {
     next(e);
