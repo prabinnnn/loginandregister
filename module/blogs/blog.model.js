@@ -1,10 +1,10 @@
-const { Schema, mdoel } = require("mongoose");
-const { OjectId } = Schema.Types;
+const { Schema, model } = require("mongoose");
+const { ObjectId } = Schema.Types; // Fixed typo in 'ObjectId'
 const blogSchema = new Schema({
-  title: { type: String, reuired: true },
-  author: { type: OjectId, require: true },
+  title: { type: String, required: true }, // Fixed typo in 'required'
+  author: { type: [ObjectId], required: true }, // Fixed typo in 'required' and used singular 'ObjectId'
   content: { type: String, required: true },
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
-module.exports = new model("Blog", blogSchema);
+module.exports = model("Blog", blogSchema);

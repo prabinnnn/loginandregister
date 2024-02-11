@@ -6,7 +6,8 @@ const create = () => {};
 const removeById = () => {};
 const bookmarks = (payload) => {
   const { users, blogs } = payload;
-  if (!users || !blogs) throw new Error("user or blogs dosent match ");
+  if (!users.length > 0 || !blogs.length > 0)
+    throw new Error("user or blogs dosent match ");
   return blogModel.create(payload);
 };
 const authBlog = () => {};

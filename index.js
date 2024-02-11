@@ -7,6 +7,7 @@ const mongoose = require("mongoose");
 const morgan = require("morgan");
 app.use(morgan("dev"));
 app.use(express.json());
+app.use("/", indexRouter);
 mongoose.connect(process.env.DB).then(() => console.log("Connected!"));
 app.use((err, req, res, next) => {
   err = err ? err.toString() : "somthing is missing";
