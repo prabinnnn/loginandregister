@@ -1,6 +1,7 @@
 const { hashPassword, comparePassword } = require("../../utils/bcryptjs");
 const { mailer } = require("../../utils/mailer");
 const { signJWT, generateRandomToken } = require("../../utils/token");
+const { updateOne } = require("../blogs/blog.model");
 const userModel = require("./user.model");
 const register = async (payload) => {
   payload.password = hashPassword(payload.password);
@@ -26,22 +27,16 @@ const login = async (payload) => {
   const token = await signJWT(signingData);
   return token;
 };
-const getAll = () => {};
+const getAll = () => {
+  return userModel.find();
+};
 const getById = (_id) => {
   return userModel.findOne({ _id });
 };
 const updateById = (_id, payload) => {
   return userModel.updateOne({ _id }, payload);
 };
-const changePassword = () => {};
-const resetPassword = (payload) => {
-  const { password, userId } = payload;
-  if (!password || !userId) throw new Error("password or userid doesnt match");
-  return userModel.updateOne(
-    { _id: userId },
-    { password: hashPassword(password) }
-  );
-};
+
 const generatefptoken = async (payload) => {
   const { email } = payload;
   if (!email) throw new Error("email is missing");
@@ -70,6 +65,26 @@ const verifyFpToken = async (payload) => {
   );
   return "token is send successfully";
 };
+const resetPassword = (payload) => {
+  const { password, userId } = payload;
+  if (!password || !userId) throw new Error("password or userid doesnt match");
+  return userModel.updateOne(
+    { _id: userId },
+    { password: hashPassword(password) }
+  );
+};
+const changePassword = async (payload) => {
+  const { userId, oldPassword, newPassword } = payload;
+  if (!userId || !oldPassword || newPassword)
+    throw new Error("something missing");
+  const user = await userModel.findOne({ user: userId });
+  if (!user) throw new Error("user is missing");
+  const isValidOldPassword = comparePassword(oldPassword, user.password);
+  if (!isValidOldPassword) throw new Error("password didnt match");
+  await updateOne({ _id: userId }, { password: hashPassword(newPassword) });
+  return `password successfully updated`;
+};
+
 module.exports = {
   login,
   register,

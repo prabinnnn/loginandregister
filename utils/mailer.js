@@ -16,7 +16,7 @@ const mailer = async (email, subject, body) => {
   const info = await transporter.sendMail({
     from: '"prabin" <bhandariprabin402@gmail.com>', // sender address
     to: email, // list of receivers
-    subject: "successful registration", // Subject line
+    subject, // Subject line
     text: "successful registration", // plain text body
     html: `<b>${body}</b>`, // html body
   });
