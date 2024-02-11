@@ -18,13 +18,15 @@ const register = async (payload) => {
 const login = async (payload) => {
   const { email, password } = payload;
   if (!email || !password) throw new Error("user or email doesnt exit");
-  const user = userModel.findOne({ email }).select("+password");
+  const user = await userModel
+    .findOne({ email, isActive: true })
+    .select("+password");
   if (!user) throw new Error("user doesnt exits");
   const { password: hashPw } = user;
-  const result = comparePassword(hashPw, password);
+  const result = comparePassword(password, hashPw);
   if (!result) throw new Error("password doesnt matchh please try again");
   const signingData = { name: user.name, email: user.email, roles: user.roles };
-  const token = await signJWT(signingData);
+  const token = signJWT(signingData);
   return token;
 };
 const getAll = () => {
