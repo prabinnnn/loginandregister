@@ -23,7 +23,7 @@ router.post("/login", async (req, res, next) => {
 });
 
 // Example of a role-restricted login route
-router.get("/", checkRoles(["user"]), async (req, res, next) => {
+router.get("/", checkRoles(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.getAll();
     res.json({ msg: result });
