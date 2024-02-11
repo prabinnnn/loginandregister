@@ -43,7 +43,7 @@ const generatefptoken = async (payload) => {
   const user = await userModel.findOne({ email });
   if (!user) throw new Error("user dosent exits");
   const randomToken = generateRandomToken();
-  await userModel.updateOne({ email }, { token });
+  await userModel.updateOne({ email }, { token: randomToken });
   const isEmailSent = await mailer(
     user.mail,
     "forget Password",
