@@ -14,7 +14,7 @@ const verifyJWT = (token) => {
 };
 
 const generateRandomToken = () => {
-  return Math.floor(100000 + Math.random() * 900000); // Corrected usage of Math.random()
+  return Math.floor(100000 + Math.random() * 900000);
 };
 
 module.exports = { signJWT, verifyJWT, generateRandomToken };
