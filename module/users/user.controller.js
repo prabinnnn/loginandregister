@@ -89,9 +89,17 @@ const changePassword = async (payload) => {
 const create = (payload) => {
   return userModel.create(payload);
 };
-
+const getProfile = async (_id) => {
+  return userModel.findOne({ _id });
+};
+const updateProfile = async ({ _id }, payload) => {
+  delete payload.email;
+  return userModel.findOne({ _id }, payload);
+};
 module.exports = {
   login,
+  getProfile,
+  updateProfile,
   register,
   getAll,
   getById,
