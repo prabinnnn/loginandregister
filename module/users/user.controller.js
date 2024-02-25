@@ -86,6 +86,9 @@ const changePassword = async (payload) => {
   await updateOne({ _id: userId }, { password: hashPassword(newPassword) });
   return `password successfully updated`;
 };
+const create = (payload) => {
+  return userModel.create(payload);
+};
 
 module.exports = {
   login,
@@ -97,4 +100,5 @@ module.exports = {
   resetPassword,
   generatefptoken,
   verifyFpToken,
+  create,
 };
