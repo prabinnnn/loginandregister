@@ -4,6 +4,7 @@ const { signJWT, generateRandomToken } = require("../../utils/token");
 const { updateOne } = require("../blogs/blog.model");
 const userModel = require("./user.model");
 const register = async (payload) => {
+  delete payload.email;
   payload.password = hashPassword(payload.password);
   const user = await userModel.create(payload);
   if (!user) throw new Error("user doesnt match,please type again");
@@ -96,8 +97,15 @@ const updateProfile = async ({ _id }, payload) => {
   delete payload.email;
   return userModel.findOne({ _id }, payload);
 };
+const blockUser = async (_id) => {
+  const user = await userModel.findOne({ _id });
+  if (!user) throw new Error("User is not found");
+  const payload = { isActive: !user.isActive };
+  return userModel.updateOne({ _id }, payload);
+};
 module.exports = {
   login,
+  blockUser,
   getProfile,
   updateProfile,
   register,
