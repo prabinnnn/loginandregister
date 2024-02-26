@@ -31,12 +31,64 @@ const login = async (payload) => {
   const token = signJWT(signingData);
   return token;
 };
-const getAll = () => {
-  return userModel.find();
-};
+
 const getById = (_id) => {
   return userModel.findOne({ _id });
 };
+const getAll = async (search, page = 1, limit = 20) => {
+  const query = [];
+  if (search?.name) {
+    query.push({
+      $match: {
+        name: new ReqExp(serach?.name, "gi"),
+      },
+    });
+  }
+
+  if (search?.email) {
+    query.push({
+      $match: {
+        name: new ReqExp(serach?.email, "gi"),
+      },
+    });
+  }
+  if (search?.phone) {
+    query.push({
+      $match: {
+        name: new ReqExp(serach?.phone, "gi"),
+      },
+    });
+  }
+  query.push({
+    $facet: {
+      metadata: [
+        {
+          $count: "total",
+        },
+      ],
+      data: [
+        {
+          $skip: (+page - 1) * +limit,
+        },
+        {
+          $limit: +limit,
+        },
+      ],
+    },
+  });
+};
+{
+  $addFields: {
+    total: {
+      $arrayElement: ["metadata", 0];
+    }
+  }
+}
+{
+  $project: {
+    metadata: 0;
+  }
+}
 const result = await userModel.aggreation(query);
 {
   return {
