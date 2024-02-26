@@ -89,7 +89,7 @@ const getAll = async (search, page = 1, limit = 20) => {
     metadata: 0;
   }
 }
-const result = await userModel.aggreation(query);
+const result = await userModel.aggreatate(query);
 {
   return {
     data: result[0].data,
