@@ -1,3 +1,4 @@
+const { query } = require("express");
 const { hashPassword, comparePassword } = require("../../utils/bcryptjs");
 const { mailer } = require("../../utils/mailer");
 const { signJWT, generateRandomToken } = require("../../utils/token");
@@ -36,6 +37,15 @@ const getAll = () => {
 const getById = (_id) => {
   return userModel.findOne({ _id });
 };
+const result = await userModel.aggreation(query);
+{
+  return {
+    data: result[0].data,
+    total: result[0].total || 0,
+    page: +page,
+    limit: +limit,
+  };
+}
 const updateById = (_id, payload) => {
   return userModel.updateOne({ _id }, payload);
 };

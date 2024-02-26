@@ -71,6 +71,14 @@ router.get("/", checkRoles(["admin"]), async (req, res, next) => {
     next(e);
   }
 });
+router.post("/", checkRoles(["admin"]), async (req, res, next) => {
+  try {
+    const result = await userController.create(req.body);
+    res.json({ msg: result });
+  } catch (e) {
+    next(e);
+  }
+});
 router.put("/", checkRoles(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.updateById(req.params.id, req.body);
@@ -79,12 +87,90 @@ router.put("/", checkRoles(["admin"]), async (req, res, next) => {
     next(e);
   }
 });
-router.get("/get-profile", checkRoles(["admin"]), async (req, res, next) => {
+router.get("/get-profile", checkRoles(["user"]), async (req, res, next) => {
   try {
-    const result = await userController.updateById(req.params.id);
+    const result = await userController.getProfile(req.params.id);
     res.json({ msg: result });
   } catch (e) {
     next(e);
+  }
+});
+router.put("/update-profile", checkRoles(["user"]), async (req, res, next) => {
+  try {
+    const result = await userController.updateProfile(req.params.id);
+    res.json({ msg: result });
+  } catch (e) {
+    next(e);
+  }
+});
+router.put("/:id", checkRoles(["user"]), async (req, res, next) => {
+  try {
+    const result = await userController.updateProfile(req.params.id);
+    res.json({ msg: result });
+  } catch (e) {
+    next(e);
+  }
+});
+router.get("/:id", checkRoles(["user"]), async (req, res, next) => {
+  try {
+    const result = await userController.updateProfile(req.params.id);
+    res.json({ msg: result });
+  } catch (e) {
+    next(e);
+  }
+  const getAll = async (search, page = 1, limit = 20) => {
+    const query = [];
+    if (search?.name) {
+      query.push({
+        $match: {
+          name: new ReqExp(serach?.name, "gi"),
+        },
+      });
+    }
+
+    if (search?.email) {
+      query.push({
+        $match: {
+          name: new ReqExp(serach?.email, "gi"),
+        },
+      });
+    }
+    if (search?.phone) {
+      query.push({
+        $match: {
+          name: new ReqExp(serach?.phone, "gi"),
+        },
+      });
+    }
+    query.push({
+      $facet: {
+        metadata: [
+          {
+            $count: "total",
+          },
+        ],
+        data: [
+          {
+            $skip: (+page - 1) * +limit,
+          },
+          {
+            $limit: +limit,
+          },
+        ],
+      },
+    });
+  };
+  {
+    $addFields: {
+      total: {
+        $arrayElement: ["metadata", 0];
+      }
+    }
+  }
+  {
+    $project: {
+      metadat: 0;
+    }
   }
 });
 module.exports = router;
