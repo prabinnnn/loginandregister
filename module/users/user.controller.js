@@ -76,28 +76,26 @@ const getAll = async (search, page = 1, limit = 20) => {
       ],
     },
   });
-};
-{
-  $addFields: {
-    total: {
-      $arrayElement: ["metadata", 0];
+  {
+    $addFields: {
+      total: {
+        $arrayElement: ["metadata", 0];
+      }
     }
   }
-}
-{
-  $project: {
-    metadata: 0;
+  {
+    $project: {
+      metadata: 0;
+    }
   }
-}
-const result = await userModel.aggreatate(query);
-{
+  const result = await userModel.aggregate(query);
   return {
     data: result[0].data,
     total: result[0].total || 0,
     page: +page,
     limit: +limit,
   };
-}
+};
 const updateById = (_id, payload) => {
   return userModel.updateOne({ _id }, payload);
 };

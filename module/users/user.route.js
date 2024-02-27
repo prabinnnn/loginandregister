@@ -1,6 +1,7 @@
 const router = require("express").Router();
 const { checkRoles } = require("../../utils/sessionManger");
 const userController = require("./user.controller");
+const userModel = require("./user.model");
 
 // Register route
 router.post("/register", async (req, res, next) => {
@@ -71,6 +72,15 @@ router.get("/", checkRoles(["admin"]), async (req, res, next) => {
     next(e);
   }
 });
+router.get("/", checkRoles(["admin"]), async (req, res, next) => {
+  try {
+    const { name, email, phone, page, limt } = req.query;
+    const search = { name, email, phone };
+    const result = await userController.getAll(search, page, limit);
+  } catch (e) {
+    next(e);
+  }
+});
 router.post("/", checkRoles(["admin"]), async (req, res, next) => {
   try {
     const result = await userController.create(req.body);
@@ -89,7 +99,7 @@ router.put("/", checkRoles(["admin"]), async (req, res, next) => {
 });
 router.get("/get-profile", checkRoles(["user"]), async (req, res, next) => {
   try {
-    const result = await userController.getProfile(req.params.id);
+    const result = await userController.getProfile(req.currentUser);
     res.json({ msg: result });
   } catch (e) {
     next(e);
@@ -103,17 +113,17 @@ router.put("/update-profile", checkRoles(["user"]), async (req, res, next) => {
     next(e);
   }
 });
-router.put("/:id", checkRoles(["user"]), async (req, res, next) => {
+router.get("/:id", checkRoles(["user"]), async (req, res, next) => {
   try {
-    const result = await userController.updateProfile(req.params.id);
+    const result = await userController.getById(req.params.id);
     res.json({ msg: result });
   } catch (e) {
     next(e);
   }
 });
-router.get("/:id", checkRoles(["user"]), async (req, res, next) => {
+router.put("/:id", checkRoles(["user"]), async (req, res, next) => {
   try {
-    const result = await userController.updateProfile(req.params.id);
+    const result = await userController.updateById(req.params.id, req.body);
     res.json({ msg: result });
   } catch (e) {
     next(e);

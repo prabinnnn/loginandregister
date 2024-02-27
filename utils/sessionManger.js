@@ -11,6 +11,7 @@ const checkRoles = (sysRoles) => {
       const { email } = user;
       const userData = await userModel.findOne({ email, isActive: true });
       if (!userData) throw new Error("User is not found");
+      console.log(userData, sysRoles);
       const isValidRole = sysRoles.some((role) => user.roles.includes(role));
       if (!isValidRole) throw new Error("permission denied");
       req.currentUser = userData._id;

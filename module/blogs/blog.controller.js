@@ -1,6 +1,21 @@
+const userModel = require("../users/user.model");
 const blogModel = require("./blog.model");
-const getAll = () => {};
-const updateById = () => {};
+const getAll = (payload) => {
+  return userModel.find();
+};
+const updateById = (payload, id) => {
+  try {
+    const check = userModel.findOne({ _id });
+    if (!check) throw new Error("conetnt dosent exit");
+    if (update.title || update.content) {
+      (update.title = payload.title) || (update.content = payload.content);
+    }
+    const { update: updatepost } = userModel.create();
+    return updatepost;
+  } catch (e) {
+    next();
+  }
+};
 const getById = () => {};
 const create = () => {};
 const removeById = () => {};
