@@ -16,9 +16,23 @@ const updateById = (payload, id) => {
     next();
   }
 };
-const getById = () => {};
-const create = () => {};
-const removeById = () => {};
+const getById = async (_id, payload) => {
+  const { email, name } = payload;
+  if (!email || !name) throw new Error("user doesnt exit");
+  const result = await userModel.findOne({ users });
+  if (!result) throw new Error("user sccount doesnt exit");
+  return result;
+};
+const create = (payload) => {
+  return userModel.create(payload);
+};
+const removeById = async (_id, payload) => {
+  const result = await userModel.findOne({ _id });
+  if (!result) throw new Error("id dosenot exit");
+  const removepost = await userModel.Remove(_id);
+  if (!removepost) throw new Error("blog doesnt exit");
+  return removepost;
+};
 const bookmarks = (payload) => {
   const { users, blogs } = payload;
   if (!users.length > 0 || !blogs.length > 0)
