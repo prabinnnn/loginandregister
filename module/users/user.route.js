@@ -2,16 +2,38 @@ const router = require("express").Router();
 const { checkRoles } = require("../../utils/sessionManger");
 const userController = require("./user.controller");
 const userModel = require("./user.model");
-
-// Register route
-router.post("/register", async (req, res, next) => {
-  try {
-    const result = await userController.register(req.body);
-    res.json({ msg: result });
-  } catch (e) {
-    next(e);
-  }
+const multer = require("multer");
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "/public/images/users");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname +
+        "-" +
+        Date.now() +
+        "." +
+        file.originalname.split(".").pop()
+    );
+  },
 });
+// Register route
+router.post(
+  "/register",
+  upload.single("profilePic"),
+  async (req, res, next) => {
+    try {
+      if (req.file) {
+        req.body.profilePic = req.file.path.replace("public", "");
+      }
+      const result = await userController.register(req.body);
+      res.json({ msg: result });
+    } catch (e) {
+      next(e);
+    }
+  }
+);
 
 // Login route
 router.post("/login", async (req, res, next) => {
