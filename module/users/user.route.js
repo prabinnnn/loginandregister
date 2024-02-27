@@ -3,9 +3,10 @@ const { checkRoles } = require("../../utils/sessionManger");
 const userController = require("./user.controller");
 const userModel = require("./user.model");
 const multer = require("multer");
+const upload = multer({ dest: "/public/image/users" });
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "/public/images/users");
+    cb(null, "./public/images/users");
   },
   filename: function (req, file, cb) {
     cb(
