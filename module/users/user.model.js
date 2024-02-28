@@ -12,6 +12,7 @@ const userSchema = new Schema({
   },
   token: String,
   isActive: { type: Boolean, required: true, default: true },
+  updateProfile: String,
   createdAt: { type: Date, default: Date.now },
   updatedAt: { type: Date, default: Date.now },
 });
